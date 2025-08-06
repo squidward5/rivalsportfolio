@@ -60,15 +60,15 @@
     }
 
     nav button::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 0%;
-        height: 2px;
-        background: white;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-        transition: width 0.3s ease;
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 2px;
+      background: white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+      transition: width 0.3s ease;
     }
 
     nav button:hover::after {
@@ -132,6 +132,12 @@
       border-radius: 10px;
       display: block;
       margin: 0 auto;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .gfx-grid img:hover {
+      transform: scale(1.03);
     }
 
     body::after {
@@ -164,11 +170,40 @@
         font-size: 2rem;
       }
     }
+
+    #lightbox-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    #lightbox-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #lightbox-image {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      transition: transform 0.15s ease;
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo" onclick="showTab('home')">zay</div>
+    <div class="logo" onclick="showTab('home', document.querySelector('nav button'))">zay</div>
     <nav>
       <button onclick="showTab('home', this)" class="active-tab">home</button>
       <button onclick="showTab('reviews', this)">reviews</button>
@@ -180,35 +215,28 @@
   <section id="home" class="tab active">
     <p><b>hey! i'm zay. i have over 3 years of photoshop experience and i can create stunning roblox rivals gfx. check out my work and feel free to reach out if you'd like to collaborate or request something!</b></p>
     <div class="gfx-grid">
-      <img src="attic (watermarked).png" alt="gfx example 1">
-      <img src="zay (revolver).png" alt="gfx example 2">
+      <div><img src="attic (watermarked).png" alt="gfx example 1"></div>
+      <div><img src="zay (revolver).png" alt="gfx example 2"></div>
+      <div><img src="Aug WATERMARK.png" alt="gfx example 3"></div>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    <br><br><br><br><br>
     <b><center><p>more work coming soon...</p></center></b>
   </section>
 
   <section id="reviews" class="tab">
     <h2>client reviews</h2>
     <div class="gfx-grid">
-      <img src="AtticVouch.png" alt="Vouch from Attic">
-      <img src="ZaneVouch.png" alt="Vouch from zane">
-      <img src="PlaceholderVouch.png" alt="Vouch from Placeholder">
+      <div><img src="AtticVouch.png" alt="Vouch from Attic"></div>
+      <div><img src="ZaneVouch.png" alt="Vouch from zane"></div>
+      <div><img src="PlaceholderVouch.png" alt="Vouch from Placeholder"></div>
     </div>
   </section>
 
   <section id="prices" class="tab">
     <h2>pricing</h2>
     <div class="gfx-grid">
-      <div>
-        <img src="Thumbnails (1).png" alt="Thumbnail example">
-      </div>
-      <div>
-        <img src="pfps (1).png" alt="Profile picture example">
-      </div>
+      <div><img src="Thumbnails (1).png" alt="Thumbnail example"></div>
+      <div><img src="pfps (1).png" alt="Profile picture example"></div>
     </div>
   </section>
 
@@ -219,6 +247,10 @@
       <p><strong>discord:</strong> _55zay</p>
     </div>
   </section>
+
+  <div id="lightbox-overlay">
+    <img id="lightbox-image" src="" alt="Enlarged Image">
+  </div>
 
   <script>
     function showTab(tabId, button) {
@@ -235,6 +267,30 @@
         button.classList.add('active-tab');
       }
     }
+
+    const images = document.querySelectorAll('.gfx-grid img');
+    const lightboxOverlay = document.getElementById('lightbox-overlay');
+    const lightboxImage = document.getElementById('lightbox-image');
+
+    images.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImage.src = img.src;
+        lightboxOverlay.classList.add('active');
+      });
+    });
+
+    lightboxImage.addEventListener('click', e => {
+      e.stopPropagation();
+    });
+
+    lightboxOverlay.addEventListener('click', () => {
+      lightboxOverlay.classList.remove('active');
+      setTimeout(() => {
+        if (!lightboxOverlay.classList.contains('active')) {
+          lightboxImage.src = "";
+        }
+      }, 150);
+    });
   </script>
 </body>
 </html>
